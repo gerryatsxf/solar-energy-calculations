@@ -5,6 +5,10 @@ import datetime
 
 
 def set_mins_since_equinox(nrel_df):
+    """
+    Sets a column with the number of minutes that have passed since the last equinox (december 21st).
+    Count gets reset every december 21st at 00:00 hrs.
+    """
     years_available = list(set(nrel_df['YEAR']))
     nrel_df['DATETIME'] = pd.to_datetime(nrel_df[['YEAR', 'MONTH', 'DAY', 'HOUR', 'MINUTE']])
     nrel_df = nrel_df.set_index('DATETIME').sort_index().reset_index()
@@ -53,9 +57,10 @@ def set_zenith_angle(nrel_df, L):
     return nrel_df
 
 def set_solar_altitude_angle(nrel_df):
-    nrel_df['ALPHA'] = 90 - nrel_df['SOLAR_ZENITH_ANGLE']
+    nrel_df = nrel_df.rename(columns={'SOLAR_ZENITH_ANGLE':'Z'})
+    nrel_df['ALPHA'] = 90 - nrel_df['Z']
     nrel_df.loc[nrel_df['ALPHA'] < 0, ['ALPHA']] = 0
-    return nrel_df.rename(columns={'SOLAR_ZENITH_ANGLE':'Z'})
+    return nrel_df
 
 def main(nrel, L):
     #nrel = set_irradiance_components(nrel)
