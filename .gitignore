@@ -8,3 +8,5 @@ __pycache__/
 
 # MacOs Files
 *.DS_Store
+
+.idea
